@@ -2,7 +2,7 @@
 const router = require('express').Router()
 const express = require('express')
 
-const {infoStatisticsController} = require('../controllers/statisticsController')
+const {infoStatisticsController, infoComponentsStatisticsController} = require('../controllers/statisticsController')
 
 //Use json parser
 router.use(express.json());
@@ -17,6 +17,15 @@ router.get('/statistics/:restaurantId', async function(req, res){
     if (checkTokenApp == null) return res.status(200).send("La requête ne peux venir que de la gateway")
 
     infoStatisticsController(req, res)
+});
+
+//Infos restaurant OK
+router.get('/components/stats', async function(req, res){
+    const tokenapp = req.headers['tokenapp'];
+    checkTokenApp = await verifTokenAppController(tokenapp)
+    if (checkTokenApp == null) return res.status(200).send("La requête ne peux venir que de la gateway")
+
+    infoComponentsStatisticsController(req, res)
 });
 
 
