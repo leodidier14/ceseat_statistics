@@ -1,7 +1,7 @@
 const { json } = require('express');
 var db = require('../database');
 const { find } = require('../models/logs');
-const dlLogs = require('../models/logs')
+const requestLog = require('../models/requestLog')
 
 //Info restaurant OK
 const infoStatisticsController = async (req, res) =>{
@@ -32,18 +32,36 @@ const infoComponentsStatisticsController = async (req, res) => {
     if(SS<10) {SS='0'+SS;} 
     tDate = dd+'/'+mm+'/'+yyyy;
     tHeure = HH+':'+MM+':'+SS;
+    
+    //allDate = await dlLogs.find().distinct('date');
 
-    allDate = await dlLogs.find().distinct('date');
+    var date = new Date(); 
+    var dateYesterday = new Date(new Date().setDate(date.getDate() - 1)); 
+
 
     var dlTab = []
-    for(var i=0; i < allDate.length; i = i+1){
-        const date = allDate[i]
-        nbDlToday = JSON.stringify(Object.keys(await dlLogs.find({date: date}).exec()).length)
+   
+        nbDlToday = JSON.stringify(
+            Object.keys(await requestLog.aggregate([{
+                $match:{date: 
+                    {
+                        $gte: dateYesterday,
+                        $lt: date
+                    }
+                }
+            },{
+                $group:{
+                    name,
+                    COUNT:{
+                        $name
+                    }
+                }
+            }]).exec()))
         const jsonform = `{"${date}":"${nbDlToday}"}`
-        dlTab[i] = JSON.parse(jsonform)
-    }
+        console.log(nbDlToday)
+    
 
-    res.status(200).send(dlTab)
+    res.status(200).send(jsonform)
 }
 
 

@@ -21,6 +21,7 @@ router.get('/statistics/:restaurantId', async function(req, res){
 
 //Infos restaurant OK
 router.get('/components/stats', async function(req, res){
+    console.log('/components/stats')
     const tokenapp = req.headers['tokenapp'];
     checkTokenApp = await verifTokenAppController(tokenapp)
     if (checkTokenApp == null) return res.status(200).send("La requête ne peux venir que de la gateway")
