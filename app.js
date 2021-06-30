@@ -8,6 +8,7 @@ require('dotenv').config({ path: path.resolve(__dirname, '.env') })
 const mongoose = require('mongoose');
 //Connect to db
 
+const route = '/api/statistics/'
 //######### Display name and version ############// 
 const apiinf = require('./models/apiinfo')
 var pjson = require('./package.json');
@@ -15,7 +16,7 @@ console.log("name : " + pjson.name);
 console.log("version : " + pjson.version);
 const PORT = process.env.PORT
 mongoose.connect(process.env.DB_MONGO_CONNECT, {useNewUrlParser: true}, () =>
- apiinf.findOneAndUpdate({name: pjson.name , port:process.env.PORT}, {version : pjson.version}, {upsert: true}).exec()
+apiinf.findOneAndUpdate({name: pjson.name , port:process.env.PORT,path:route}, {version : pjson.version}, {upsert: true}).exec()
 );
 //################################################//
 
@@ -30,7 +31,7 @@ app.use((req,res,next) => {
 const authRoute = require('./routes/routes')
 
 //Route middlewares
-app.use('/api/statistics', authRoute)
+app.use(route, authRoute)
 
 //Running server and listening on port 3000
 app.listen(PORT, () => console.log(`Serveur running on port ${PORT}`))
