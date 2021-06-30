@@ -15,7 +15,8 @@ const apiinf = require('./models/apiinfo')
 var pjson = require('./package.json');
 console.log("name : " + pjson.name);
 console.log("version : " + pjson.version);
-const apiinfos = apiinf.findOneAndUpdate({name: pjson.name}, {version : pjson.version}, {upsert: true}).exec()
+const PORT = process.env.PORT
+const apiinfos = apiinf.findOneAndUpdate({name: pjson.name , port:process.env.PORT}, {version : pjson.version}, {upsert: true}).exec()
 //################################################//
 
 app.use((req,res,next) => {
@@ -32,6 +33,5 @@ const authRoute = require('./routes/routes')
 app.use('/api/statistics', authRoute)
 
 //Running server and listening on port 3000
-const PORT = process.env.PORT
 app.listen(PORT, () => console.log(`Serveur running on port ${PORT}`))
 
