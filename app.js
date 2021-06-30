@@ -7,16 +7,16 @@ const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
 const mongoose = require('mongoose');
 //Connect to db
-mongoose.connect(process.env.DB_MONGO_CONNECT, {useNewUrlParser: true}, () =>
-    console.log("connected to database")
-);
+
 //######### Display name and version ############// 
 const apiinf = require('./models/apiinfo')
 var pjson = require('./package.json');
 console.log("name : " + pjson.name);
 console.log("version : " + pjson.version);
 const PORT = process.env.PORT
-const apiinfos = apiinf.findOneAndUpdate({name: pjson.name , port:process.env.PORT}, {version : pjson.version}, {upsert: true}).exec()
+mongoose.connect(process.env.DB_MONGO_CONNECT, {useNewUrlParser: true}, () =>
+ apiinf.findOneAndUpdate({name: pjson.name , port:process.env.PORT}, {version : pjson.version}, {upsert: true}).exec()
+);
 //################################################//
 
 app.use((req,res,next) => {
