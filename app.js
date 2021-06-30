@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 
 
-
+const requestLog = require('./models/requestLog')
 const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
 const mongoose = require('mongoose');
@@ -18,7 +18,12 @@ console.log("version : " + pjson.version);
 const apiinfos = apiinf.findOneAndUpdate({name: pjson.name}, {version : pjson.version}, {upsert: true}).exec()
 //################################################//
 
-
+app.use((req,res,next) => {
+    requestLog.create({name:pjson.name,date: Date.now()}, (err)=> {
+      if(err) console.log(err)
+    })
+    next()
+  })
 
 //Import routes
 const authRoute = require('./routes/routes')
@@ -27,6 +32,6 @@ const authRoute = require('./routes/routes')
 app.use('/api/statistics', authRoute)
 
 //Running server and listening on port 3000
-const PORT = 3005
+const PORT = process.env.PORT
 app.listen(PORT, () => console.log(`Serveur running on port ${PORT}`))
 

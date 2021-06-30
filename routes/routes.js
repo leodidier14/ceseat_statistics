@@ -25,7 +25,6 @@ router.get('/components/stats', async function(req, res){
     const tokenapp = req.headers['tokenapp'];
     checkTokenApp = await verifTokenAppController(tokenapp)
     if (checkTokenApp == null) return res.status(200).send("La requête ne peux venir que de la gateway")
-
     infoComponentsStatisticsController(req, res)
 });
 

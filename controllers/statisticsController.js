@@ -18,50 +18,29 @@ const infoStatisticsController = async (req, res) =>{
 
 const infoComponentsStatisticsController = async (req, res) => {
 
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth()+1; 
-    var yyyy = today.getFullYear();
-    var HH = today.getHours();
-    var MM = today.getMinutes();
-    var SS = today.getSeconds();
-    if(dd<10) {dd='0'+dd;}    
-    if(mm<10) {mm='0'+mm;} 
-    if(HH<10) {HH='0'+HH;} 
-    if(MM<10) {MM='0'+MM;} 
-    if(SS<10) {SS='0'+SS;} 
-    tDate = dd+'/'+mm+'/'+yyyy;
-    tHeure = HH+':'+MM+':'+SS;
-    
-    //allDate = await dlLogs.find().distinct('date');
 
     var date = new Date(); 
     var dateYesterday = new Date(new Date().setDate(date.getDate() - 1)); 
 
-
-    var dlTab = []
-   
-        nbDlToday = JSON.stringify(
-            Object.keys(await requestLog.aggregate([{
-                $match:{date: 
-                    {
-                        $gte: dateYesterday,
-                        $lt: date
-                    }
-                }
-            },{
-                $group:{
-                    name,
-                    COUNT:{
-                        $name
-                    }
-                }
-            }]).exec()))
-        const jsonform = `{"${date}":"${nbDlToday}"}`
-        console.log(nbDlToday)
+    nbDlToday = await requestLog.aggregate([
+        {
+            '$match': {
+            'date': {
+                '$gte': dateYesterday, 
+                '$lt': date
+            }
+            }
+        }, {
+            '$group': {
+            '_id': '$name', 
+            'count': {
+                '$sum': 1
+            }
+            }
+        }
+        ]).exec()
     
-
-    res.status(200).send(jsonform)
+    res.status(200).send(nbDlToday)
 }
 
 
