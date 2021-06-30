@@ -11,7 +11,7 @@ router.use(express.json());
 const {verifTokenAppController} = require('../controllers/tokenAppController')
 
 //Infos restaurant OK
-router.get('/statistics/:restaurantId', async function(req, res){
+router.get('/restaurant/:restaurantId', async function(req, res){
     const tokenapp = req.headers['tokenapp'];
     checkTokenApp = await verifTokenAppController(tokenapp)
     if (checkTokenApp == null) return res.status(200).send("La requête ne peux venir que de la gateway")
