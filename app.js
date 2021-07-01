@@ -15,7 +15,7 @@ var pjson = require('./package.json');
 console.log("name : " + pjson.name);
 console.log("version : " + pjson.version);
 const PORT = process.env.PORT
-mongoose.connect(process.env.DB_MONGO_CONNECT, {useNewUrlParser: true}, () =>
+mongoose.connect(process.env.DB_MONGO_CONNECT, {useNewUrlParser: true, useUnifiedTopology:true}, () =>
 apiinf.findOneAndUpdate({name: pjson.name , port:process.env.PORT,path:route}, {version : pjson.version}, {upsert: true}).exec()
 );
 //################################################//
